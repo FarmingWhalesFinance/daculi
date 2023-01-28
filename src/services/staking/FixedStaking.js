@@ -11,7 +11,7 @@ import {
 import { formatDate } from '../../utils/formatDate'
 
 export function withFixedStakingApi(Component) {
-  return function({ contractAddress, tokenContract, ...props }) {
+  return function ({ contractAddress, tokenContract, ...props }) {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const signer = provider.getSigner()
     const contract = new ethers.Contract(
@@ -64,7 +64,8 @@ export function withFixedStakingApi(Component) {
             totalYield: formatAttoToToken(stake.totalYield),
           }
           const lockedYield = formatAttoToToken(
-            stake.totalYield.sub(stake.harvestableYield),
+            // stake.totalYield.sub(stake.harvestableYield),
+            stake.totalYield,
           )
           totalStaked = totalStaked.add(stake.stakedAmount)
           const expired = endTime * 1000 < Date.now()
@@ -86,14 +87,14 @@ export function withFixedStakingApi(Component) {
               //   value: formatDate(endTime, true),
               // },
               { name: 'Staked amount', value: stakedAmount },
-            
+
               // {
               //   name: 'Total yield (for entire period)',
               //   value: `1.55% or ${totalYield} DAO1`,
               // },
               {
-                name: 'Locked yield (releases over time)',
-                value: lockedYield,
+                name: 'Generated yield: ',
+                value: harvestableYield,
               },
               // { name: 'Released yield (harvest + harvestable)', value: 0.674 },
               // { name: 'Harvested yield', value: harvestedYiels },
@@ -101,7 +102,6 @@ export function withFixedStakingApi(Component) {
               //   name: 'Harvestable now (available for withdrawal)',
               //   value: harvestableYield,
               // },
-            
             ],
           }
         })
@@ -145,7 +145,7 @@ export function withFixedStakingApi(Component) {
     }
 
     async function approve() {
-      try { 
+      try {
         return DAO1Signer.approve(contractAddress, ethers.constants.MaxUint256)
       } catch (error) {
         console.log(error)
