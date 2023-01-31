@@ -241,7 +241,7 @@ function StakingCardPure({ api, APY }) {
         })
         .catch((err) => {
           setCardTxHash(null)
-          setCardErrorMessage(String(err.message))
+          setCardErrorMessage("You must wait at least 3 hours to unstake (anti-whale dumping prevention)")
           console.log(err)
         })
     }
